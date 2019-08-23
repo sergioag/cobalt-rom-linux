@@ -112,6 +112,10 @@ extern void ecard_init(void);
 extern void ipc_init(void);
 #endif
 
+#if defined(CONFIG_COBALT_BOOTLOADER)
+extern void cobalt_boot_do_it(void);
+#endif
+
 #ifdef CONFIG_COBALT
 extern int cobalt_init(void);
 #endif
@@ -591,6 +595,10 @@ static int init(void * unused)
 
 	(void) dup(0);
 	(void) dup(0);
+
+#ifdef CONFIG_COBALT_BOOTLOADER
+	cobalt_boot_do_it();
+#endif
 	
 	/*
 	 * We try each of these until one succeeds.
