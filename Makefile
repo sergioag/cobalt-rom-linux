@@ -194,6 +194,7 @@ DRIVERS-$(CONFIG_BLUEZ) += drivers/bluetooth/bluetooth.o
 DRIVERS-$(CONFIG_HOTPLUG_PCI) += drivers/hotplug/vmlinux-obj.o
 DRIVERS-$(CONFIG_ISDN_BOOL) += drivers/isdn/vmlinux-obj.o
 DRIVERS-$(CONFIG_CRYPTO) += crypto/crypto.o
+DRIVERS-$(CONFIG_COBALT) += drivers/cobalt/cobalt.o
 
 DRIVERS := $(DRIVERS-y)
 
@@ -578,3 +579,8 @@ rpm:	clean spec
 	. scripts/mkversion > .version ; \
 	$(RPM) -ta $(TOPDIR)/../$(KERNELPATH).tar.gz ; \
 	rm $(TOPDIR)/../$(KERNELPATH).tar.gz
+
+cobalt: vmlinux
+	strip vmlinux
+	gzip -9 vmlinux
+

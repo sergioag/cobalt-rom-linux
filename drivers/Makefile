@@ -49,4 +49,6 @@ subdir-$(CONFIG_ACPI_BOOT)	+= acpi
 
 subdir-$(CONFIG_BLUEZ)		+= bluetooth
 
+subdir-$(CONFIG_COBALT)		+= cobalt
+
 include $(TOPDIR)/Rules.make

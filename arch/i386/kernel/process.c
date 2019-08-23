@@ -50,6 +50,11 @@
 #endif
 #include <asm/apic.h>
 
+#ifdef CONFIG_COBALT_RAQ
+#include <cobalt/misc.h>
+#include <cobalt/lcd.h>
+#endif
+
 #include <linux/irq.h>
 
 asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
@@ -365,6 +370,30 @@ void machine_real_restart(unsigned char *code, int length)
 				: "i" ((void *) (0x1000 - sizeof (real_mode_switch) - 100)));
 }
 
+/* kill some time at halt/reboot to allow drives with large cache to sync */
+static inline void
+wait_for_flush(void)
+{
+	int i;
+	static int flushed;
+
+	if (flushed)
+		return;
+	flushed = 1;
+
+	printk("waiting for devices to flush");
+	for (i = 0 ; i < 10; i++) {
+		printk(".");
+		mdelay(500);
+#ifdef CONFIG_COBALT_LCD
+		if (i == 8)
+			cobalt_lcd_off();
+#endif
+	}
+	printk("done\n");
+}
+
+
 void machine_restart(char * __unused)
 {
 #if CONFIG_SMP
@@ -412,6 +441,11 @@ void machine_restart(char * __unused)
 	disable_IO_APIC();
 #endif
 
+	wait_for_flush();
+#ifdef CONFIG_COBALT_RAQ
+	cobalt_restart();
+#endif
+
 	if(!reboot_thru_bios) {
 		/* rebooting needs to touch the page at absolute addr 0 */
 		*((unsigned short *)__va(0x472)) = reboot_mode;
@@ -434,10 +468,18 @@ void machine_restart(char * __unused)
 
 void machine_halt(void)
 {
+	wait_for_flush();
+#ifdef CONFIG_COBALT_RAQ
+	cobalt_halt();
+#endif
 }
 
 void machine_power_off(void)
 {
+	wait_for_flush();
+#ifdef CONFIG_COBALT_RAQ
+	cobalt_power_off();
+#endif
 	if (pm_power_off)
 		pm_power_off();
 }

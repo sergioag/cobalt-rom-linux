@@ -50,6 +50,10 @@
 #include <linux/irq.h>
 #include <linux/module.h>
 
+#ifdef CONFIG_COBALT_RAQ
+#include <cobalt/misc.h>
+#endif
+
 asmlinkage int system_call(void);
 asmlinkage void lcall7(void);
 asmlinkage void lcall27(void);
@@ -428,9 +432,12 @@ gp_in_kernel:
 
 static void mem_parity_error(unsigned char reason, struct pt_regs * regs)
 {
+#ifdef CONFIG_COBALT_RAQ
+    	cobalt_nmi(reason, regs);
+#else
 	printk("Uhhuh. NMI received. Dazed and confused, but trying to continue\n");
 	printk("You probably have a hardware problem with your RAM chips\n");
-
+#endif
 	/* Clear and disable the memory parity error line. */
 	reason = (reason & 0xf) | 4;
 	outb(reason, 0x61);

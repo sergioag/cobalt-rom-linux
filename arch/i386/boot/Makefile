@@ -16,9 +16,11 @@ zImage: $(CONFIGURE) bootsect setup compressed/vmlinux tools/build
 	$(OBJCOPY) compressed/vmlinux compressed/vmlinux.out
 	tools/build bootsect setup compressed/vmlinux.out $(ROOT_DEV) > zImage
 
-bzImage: $(CONFIGURE) bbootsect bsetup compressed/bvmlinux tools/build
-	$(OBJCOPY) compressed/bvmlinux compressed/bvmlinux.out
-	tools/build -b bbootsect bsetup compressed/bvmlinux.out $(ROOT_DEV) > bzImage
+#bzImage: $(CONFIGURE) bbootsect bsetup compressed/bvmlinux tools/build
+#	$(OBJCOPY) compressed/bvmlinux compressed/bvmlinux.out
+#	tools/build -b bbootsect bsetup compressed/bvmlinux.out $(ROOT_DEV) > bzImage
+bzImage: $(CONFIGURE) $(TOPDIR)/vmlinux
+	gzip -9 < $(TOPDIR)/vmlinux > bzImage
 
 compressed/vmlinux: $(TOPDIR)/vmlinux
 	@$(MAKE) -C compressed vmlinux

@@ -1,0 +1,19 @@
+Notes on Cobalt's drivers:
+
+You will notice in several places constructs such as this:
+
+	if (cobt_is_3k()) {
+		foo();
+	} else if (cobt_is_5k()) {
+		bar();
+	}
+
+The goal here is to only compile in code that is needed, but to allow one to
+define support for both 3k and 5k (and more?) style systems.  The systype
+check macros are very simple and clean.  They check whether config-time
+support for the generation has been enabled, and (if so) whether the current
+systype matches the spcified generation.  This leaves the code free from 
+#ifdef cruft, but lets the compiler throw out unsupported generation-specific 
+code with if (0) detection.
+
+--

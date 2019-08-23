@@ -112,6 +112,10 @@ extern void ecard_init(void);
 extern void ipc_init(void);
 #endif
 
+#ifdef CONFIG_COBALT
+extern int cobalt_init(void);
+#endif
+
 /*
  * Boot command-line arguments
  */
@@ -528,6 +532,9 @@ static void __init do_basic_setup(void)
 #endif
 #ifdef CONFIG_TC
 	tc_init();
+#endif
+#ifdef CONFIG_COBALT
+	cobalt_init();
 #endif
 
 	/* Networking initialization needs a process context */ 

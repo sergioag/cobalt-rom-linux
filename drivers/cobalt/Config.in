@@ -1,0 +1,42 @@
+#
+# Cobalt Networks hardware support
+#
+mainmenu_option next_comment
+comment 'Sun and Cobalt Networks support'
+bool 'Support for Sun and Cobalt Networks x86 systems' CONFIG_COBALT
+
+if [ "$CONFIG_COBALT" != "n" ]; then
+   bool '  Cobalt RaQ/Qube hardware' CONFIG_COBALT_RAQ
+   if [ "$CONFIG_COBALT_RAQ" != "n" ]; then
+      bool '  Gen III (3000 series) system support' CONFIG_COBALT_GEN_III
+      bool '  Gen V (5000 series) system support' CONFIG_COBALT_GEN_V
+      bool '  Create legacy /proc files' CONFIG_COBALT_OLDPROC
+      bool '  Cobalt Bootloader Support' CONFIG_COBALT_BOOTLOADER
+
+      comment 'Cobalt hardware options'
+
+      bool '  Front panel (LCD) support' CONFIG_COBALT_LCD
+      if [ "$CONFIG_COBALT_LCD" != "n" ]; then
+         bool '    Use compatible device number' CONFIG_COBALT_LCD_DEV_COMPAT
+         bool '    Twiddle LCD on boot' CONFIG_COBALT_LCD_TWIDDLE
+      fi
+      bool '  Software controlled LED support' CONFIG_COBALT_LED
+      tristate '  Serial number support' CONFIG_COBALT_SERNUM
+      if [ "$CONFIG_KDB" != "y" ]; then
+         bool '  Watchdog timer support' CONFIG_COBALT_WDT
+      fi
+      bool '  System sensors support' CONFIG_COBALT_SENSORS
+      tristate '  Fan tachometer support' CONFIG_COBALT_FANS
+      tristate '  Memory information support' CONFIG_COBALT_RAMINFO
+      bool '  Disk drive ruler support' CONFIG_COBALT_RULER
+      if [ "$CONFIG_COBALT_GEN_V" != "n" ]; then
+         bool '  Cobalt ACPI support' CONFIG_COBALT_ACPI
+      else
+         define_bool CONFIG_COBALT_ACPI n
+      fi
+      if [ "$CONFIG_COBALT_ACPI" != "n" ]; then
+         bool '  /proc/acpi emulation' CONFIG_COBALT_EMU_ACPI
+      fi
+   fi
+fi
+endmenu

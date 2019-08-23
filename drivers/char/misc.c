@@ -266,7 +266,7 @@ int __init misc_init(void)
 #ifdef CONFIG_TOSHIBA
 	tosh_init();
 #endif
-#ifdef CONFIG_COBALT_LCD
+#ifdef CONFIG_COBALT_MIPS_LCD
 	lcd_init();
 #endif
 #ifdef CONFIG_I8K
