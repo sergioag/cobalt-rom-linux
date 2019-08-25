@@ -21,6 +21,8 @@ static int c_remap_area_pages(unsigned long address, unsigned long phys_addr,
 #define RAMCODE_START 0x01000000  /* 16MB */
 #define RAMCODE_END   0x02000000  /* 32MB */
 
+#define MAX_KERNEL_SIZE	0x00200000 /* 2MB */
+
 struct cobalt_boot_return_data
 {
 	int error;
@@ -196,7 +198,7 @@ void cobalt_boot_do_it(void)
 
 	/* map in physical locations of for kernel */
 	load_addr = (unsigned char *) 
-		ioremap(cobalt_boot_load, 0x00200000 /* 2MB */);
+		ioremap(cobalt_boot_load, MAX_KERNEL_SIZE);
 	ret_data = (struct cobalt_boot_return_data *)ioremap(cobalt_boot_data, 
 		sizeof(struct cobalt_boot_return_data));
 
@@ -216,7 +218,7 @@ void cobalt_boot_do_it(void)
 	ret_data->flen = 0;
 
 	while ((read_len = sys_read(fd, load_addr, 
-	 0x00200000 - ret_data->flen)) > 0) {
+	 MAX_KERNEL_SIZE - ret_data->flen)) > 0) {
 		ret_data->flen += read_len;
 		load_addr += read_len;
 	}
