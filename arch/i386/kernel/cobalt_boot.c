@@ -21,7 +21,7 @@ static int c_remap_area_pages(unsigned long address, unsigned long phys_addr,
 #define RAMCODE_START 0x01000000  /* 16MB */
 #define RAMCODE_END   0x02000000  /* 32MB */
 
-#define MAX_KERNEL_SIZE	0x00200000 /* 2MB */
+#define MAX_KERNEL_SIZE	0x00400000 /* 4MB */
 
 struct cobalt_boot_return_data
 {
